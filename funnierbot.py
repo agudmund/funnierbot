@@ -7,6 +7,8 @@
 # -aeVar 2017
 
 import requests as r
+import wikipedia
+import random
 import json
 
 funny = 'https://api.telegram.org/bot333486385:AAFGYg14V7hJJqRKyTx5tF2sb2beEu07MCg'
@@ -39,6 +41,18 @@ def latest():
 
     return text
 
+def wiki(text):
+    '''Checks wikipedia for generic descriptions'''
+    
+    query = text.lstrip('What is')
+    
+    rez = wikipedia.search(query)
+    that = (random.choice(rez))
+    something = wikipedia.summary(that)
+
+    return something
+
 if __name__ == '__main__':
     info()
     print ( latest() )
+    print ( wiki('funny') )
