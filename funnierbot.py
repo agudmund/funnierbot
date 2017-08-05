@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# *-* coding: utf:8  *-*
+# *-* coding: utf-8  *-*
 #
 #  Very minimal Telegram chat bot client
 # only echos back positive reinforcement and wikipedia things
@@ -23,5 +23,22 @@ def info():
 
     return True
 
+def latest():
+    '''Returns latest messages sent to the bot'''
+
+    rez = r.get( '%s/getUpdates' % funny )
+    z = json.loads( rez.text )['result']
+
+    for n in z:
+        t = n['message']
+
+    try:
+        text = t['text']
+    except UnboundLocalError as e:
+        text = "No new messages..... "
+
+    return text
+
 if __name__ == '__main__':
     info()
+    print ( latest() )
