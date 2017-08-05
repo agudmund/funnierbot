@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# *-* coding: utf-8  *-*
 #
 #  Very minimal Telegram chat bot client
 # only echos back positive reinforcement and wikipedia things
@@ -12,8 +11,39 @@ import argparse
 import urllib
 import random
 import json
+from time import sleep
+from tweepy import OAuthHandler,API,Stream
+from tweepy.streaming import StreamListener
 
 funny = 'https://api.telegram.org/bot333486385:AAFGYg14V7hJJqRKyTx5tF2sb2beEu07MCg'
+
+class Base:
+    '''Twitter Base'''
+    def __init__(self, name=None, keyfile=None):
+        self.name = 'Iconic'
+        self.auth = OAuthHandler('Wk5EtgxFPHlHz0faPksSyg2os', 'fYsrs6nnBQgeP13tBnGTGU2TdUwbuwFx3h1CwWVBgahnCvtPp7')
+        self.auth.set_access_token('892285153988489216-paRKPfXaIYGGAV7nSffkYuOENG8pVXR', 'gKQBRfnggyRiPIhodVUbbOwSzxguv6zi8H9eaEvmLSeLK' )
+        self.api = API(self.auth)
+        self.me = self.api.me()
+        self.listen = StdOutListener()
+        self.stream = Stream(self.auth, self.listen)
+
+class StdOutListener(StreamListener):
+
+    def on_data(self, data):
+        result = json.loads(data)
+
+        text = urllib.parse.quote_plus(result['text'])
+        r.post(r'%s/sendMessage?text=%s&chat_id=339387792'%(funny,text))
+        sleep(3)
+
+        return True
+
+    def on_error(self, status):
+        print (status)
+
+        return False
+
 
 def info():
     '''Returns basic information about self'''
@@ -55,6 +85,8 @@ def wiki(text):
     return something
 
 if __name__ == '__main__':
+
+    twitter = Base()
 
     parser = argparse.ArgumentParser(description='Funny bot and friends')
     parser.add_argument('--info', help='Basic Information',action="store_true")
