@@ -8,6 +8,8 @@
 
 import requests as r
 import wikipedia
+import argparse
+import urllib
 import random
 import json
 
@@ -53,6 +55,36 @@ def wiki(text):
     return something
 
 if __name__ == '__main__':
-    info()
-    print ( latest() )
-    print ( wiki('funny') )
+
+    parser = argparse.ArgumentParser(description='Funny bot and friends')
+    parser.add_argument('--info', help='Basic Information',action="store_true")
+    parser.add_argument('--new', help='Latest Messages',action="store_true")
+    parser.add_argument('--say', type=str, help='Speak',action="store")
+    parser.add_argument('--twit', help='Twit',action="store_true")
+    parser.add_argument('--listen', help='Listening daemon',action="store_true")
+    parser.add_argument('--audio', help='Responds with an audio file',action="store_true")
+    parser.add_argument('--image', help='Responds with an image file',action="store_true")
+    args = parser.parse_args()
+
+    if args.new:
+        print ( latest() )
+    
+    if args.info:
+        info()
+
+    if args.say:
+        if args.say == 'image':
+            sendImage()
+        else:
+            text = urllib.parse.quote_plus(args.say)
+            r.post(r'%s/sendMessage?text=%s&chat_id=339387792'%(funny,text))
+    
+    if args.twit:
+        twitter.stream.filter(track='sexy')
+
+    if args.listen:
+        listen()
+    if args.audio:
+        sendAudio()
+    if args.image:
+        sendImage()
