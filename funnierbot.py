@@ -11,6 +11,7 @@ import argparse
 import urllib
 import random
 import json
+import os
 from time import sleep
 from tweepy import OAuthHandler,API,Stream
 from tweepy.streaming import StreamListener
@@ -44,6 +45,18 @@ class StdOutListener(StreamListener):
 
         return False
 
+def sendImage(path='', chat_id=0, debug=False ):
+    '''Sends a random image from the gallery'''
+
+    url = "%s/sendPhoto" % funny
+    images = os.listdir( path )
+    target_image = os.path.join( path,random.choice(images) )
+    files = {'photo': open( target_image, 'rb')}
+    data = {'chat_id' : chat_id }
+    rez= r.post(url, files=files, data=data)
+
+    if debug:
+        print(rez.status_code, rez.reason, rez.content)
 
 def info():
     '''Returns basic information about self'''
@@ -119,4 +132,4 @@ if __name__ == '__main__':
     if args.audio:
         sendAudio()
     if args.image:
-        sendImage()
+        sendImage(path=r"C:\Users\aevar\Dropbox\Images\Heimur",chat_id="339387792")
