@@ -86,6 +86,25 @@ def latest():
 
     return text
 
+def listen():
+    last = None
+    while True:
+        text = latest()
+        if text != last:
+            print (text)
+            print (last)
+            if last != None:
+
+                if text.startswith('What is'):
+                    rez = wiki(text)
+                    this = urllib.parse.quote_plus(rez)
+                    r.post(r'%s/sendMessage?text=%s&chat_id=339387792'%(funny,str(this)))
+                else:
+                    r.post(r'%s/sendMessage?text=%s&chat_id=339387792'%(funny,'yes'))
+            last = text
+
+        sleep(0.5)
+
 def wiki(text):
     '''Checks wikipedia for generic descriptions'''
     
