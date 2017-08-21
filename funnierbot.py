@@ -58,6 +58,14 @@ def sendImage(path='', chat_id=0, debug=False ):
     if debug:
         print(rez.status_code, rez.reason, rez.content)
 
+def sendAudio():
+    url = "%s/sendAudio" % funny
+    path = r'C:\Users\aevar\Dropbox\Assets\Audio\CERN Sound\Cafeteria.wav'
+    files = {'audio': open(path, 'rb')}
+    data = {'chat_id' : "339387792"}
+    rez= r.post(url, files=files, data=data)
+    print(rez.status_code, rez.reason, rez.content)
+
 def info():
     '''Returns basic information about self'''
 
@@ -132,20 +140,13 @@ if __name__ == '__main__':
 
     if args.new:
         print ( latest() )
-    
     if args.info:
         info()
-
     if args.say:
-        if args.say == 'image':
-            sendImage()
-        else:
-            text = urllib.parse.quote_plus(args.say)
-            r.post(r'%s/sendMessage?text=%s&chat_id=339387792'%(funny,text))
-    
+        text = urllib.parse.quote_plus(args.say)
+        r.post(r'%s/sendMessage?text=%s&chat_id=339387792'%(funny,text))
     if args.twit:
         twitter.stream.filter(track='sexy')
-
     if args.listen:
         listen()
     if args.audio:
