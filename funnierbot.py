@@ -11,19 +11,21 @@ import argparse
 import urllib
 import random
 import json
+import read
 import os
 from time import sleep
 from tweepy import OAuthHandler,API,Stream
 from tweepy.streaming import StreamListener
 
 funny = 'https://api.telegram.org/bot333486385:AAFGYg14V7hJJqRKyTx5tF2sb2beEu07MCg'
+keys = read.keys()
 
 class Base:
     '''Twitter Base'''
     def __init__(self, name=None, keyfile=None):
         self.name = 'Iconic'
-        self.auth = OAuthHandler('Wk5EtgxFPHlHz0faPksSyg2os', 'fYsrs6nnBQgeP13tBnGTGU2TdUwbuwFx3h1CwWVBgahnCvtPp7')
-        self.auth.set_access_token('892285153988489216-paRKPfXaIYGGAV7nSffkYuOENG8pVXR', 'gKQBRfnggyRiPIhodVUbbOwSzxguv6zi8H9eaEvmLSeLK' )
+        self.auth = OAuthHandler(keys[0], keys[1])
+        self.auth.set_access_token(keys[2], keys[3] )
         self.api = API(self.auth)
         self.me = self.api.me()
         self.listen = StdOutListener()
