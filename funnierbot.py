@@ -62,7 +62,6 @@ class Iconic:
 
         return chat_id
 
-
     def getUpdates(self):
         '''Retrieves conversation updates'''
 
@@ -70,6 +69,28 @@ class Iconic:
         z = json.loads( rez.text )['result']
 
         return z
+
+    def wiki(self, text):
+        '''Checks wikipedia for generic descriptions'''
+   
+        text = text.replace('?','')
+        prefix = text[0:7].lower()
+        query = text[7:].lstrip()
+        rez = wikipedia.search(query)
+        if rez ==[]:
+            something = "Not something I've heard of"
+            return something
+        that = (random.choice(rez))
+        try:
+            something = wikipedia.summary(that)
+        except wikipedia.exceptions.DisambiguationError as e:
+            rex = random.choice(e.args)
+            if len(rex)==1:
+                something = self.wiki('what is %s' % rex)
+            else:
+                something = self.wiki('what is %s' % random.choice(rex))
+
+        return something
 
 def reply():
     with open('generic.txt') as data:
@@ -136,16 +157,23 @@ def listen():
             print (text)
             print (last)
             if last != None:
+                text = text.lower()
 
-                if text.startswith('What is'):
-                    rez = wiki(text)
+                if text.startswith('what is'):
+                    rez = iconic.wiki(text)
                     this = urllib.parse.quote_plus(rez)
                     r.post(r'%s/sendMessage?text=%s&chat_id=%s'%(funny,str(this),iconic.getChatID()))
+                    last = None
+                    continue
                 else:
                     r.post(r'%s/sendMessage?text=%s&chat_id=%s'%(funny,reply(),iconic.getChatID()))
+                    last = None
+                    continue
 
                 if text.startswith('send me audio'):
                     sendAudio()
+                    last = None
+                    continue
 
             last = text
 
