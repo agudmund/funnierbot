@@ -51,6 +51,8 @@ def sendImage(path='', chat_id=0, debug=False ):
     '''Sends a random image from the gallery'''
 
     url = "%s/sendPhoto" % funny
+    if path='':
+        path =  os.getenv('ICONIC_IMAGES')
     images = os.listdir( path )
     target_image = os.path.join( path,random.choice(images) )
     files = {'photo': open( target_image, 'rb')}
@@ -62,8 +64,9 @@ def sendImage(path='', chat_id=0, debug=False ):
 
 def sendAudio():
     url = "%s/sendAudio" % funny
-    path = r'C:\Users\aevar\Dropbox\Assets\Audio\CERN Sound\Cafeteria.wav'
-    files = {'audio': open(path, 'rb')}
+    path = os.getenv('ICONIC_AUDIO')
+    selected = random.choice(os.listdir(path))
+    files = {'audio': open(os.path.join(path,selected), 'rb')}
     data = {'chat_id' : "339387792"}
     rez= r.post(url, files=files, data=data)
     print(rez.status_code, rez.reason, rez.content)
@@ -111,6 +114,10 @@ def listen():
                     r.post(r'%s/sendMessage?text=%s&chat_id=339387792'%(funny,str(this)))
                 else:
                     r.post(r'%s/sendMessage?text=%s&chat_id=339387792'%(funny,'yes'))
+
+                if text.startswith('+audio'):
+                    sendAudio()
+
             last = text
 
         sleep(0.5)
@@ -154,4 +161,4 @@ if __name__ == '__main__':
     if args.audio:
         sendAudio()
     if args.image:
-        sendImage(path=r"C:\Users\aevar\Dropbox\Images\Heimur",chat_id="339387792")
+        sendImage(chat_id="339387792")
