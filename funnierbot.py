@@ -47,6 +47,15 @@ class StdOutListener(StreamListener):
 
         return False
 
+class Iconic:
+    def __init__(self):
+        self.name = 'Iconic'
+
+def reply():
+    with open('generic.txt') as data:
+        rez = data.readlines()
+    return random.choice(rez).rstrip('\n')
+
 def sendImage(path='', chat_id=0, debug=False ):
     '''Sends a random image from the gallery'''
 
@@ -113,7 +122,7 @@ def listen():
                     this = urllib.parse.quote_plus(rez)
                     r.post(r'%s/sendMessage?text=%s&chat_id=339387792'%(funny,str(this)))
                 else:
-                    r.post(r'%s/sendMessage?text=%s&chat_id=339387792'%(funny,'yes'))
+                    r.post(r'%s/sendMessage?text=%s&chat_id=339387792'%(funny,reply()))
 
                 if text.startswith('+audio'):
                     sendAudio()
@@ -162,3 +171,4 @@ if __name__ == '__main__':
         sendAudio()
     if args.image:
         sendImage(chat_id="339387792")
+    
