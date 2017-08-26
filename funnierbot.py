@@ -51,8 +51,8 @@ def sendImage(path='', chat_id=0, debug=False ):
     '''Sends a random image from the gallery'''
 
     url = "%s/sendPhoto" % funny
-    if path='':
-        path ==  os.getenv('ICONIC_IMAGES')
+    if path=='':
+        path =  os.getenv('ICONIC_IMAGES')
     images = os.listdir( path )
     target_image = os.path.join( path,random.choice(images) )
     files = {'photo': open( target_image, 'rb')}
