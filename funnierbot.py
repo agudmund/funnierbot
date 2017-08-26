@@ -50,6 +50,26 @@ class StdOutListener(StreamListener):
 class Iconic:
     def __init__(self):
         self.name = 'Iconic'
+        self.id = 'https://api.telegram.org/bot333486385:AAFGYg14V7hJJqRKyTx5tF2sb2beEu07MCg'
+        self.chat_id = '339387792'
+
+    def getChatID(self):
+        try:
+            chat_id = self.getUpdates()[-1]['message']['chat']['id']
+        except KeyError as e:
+            print ('--[ No new messages')
+            chat_id = self.chat_id
+
+        return chat_id
+
+
+    def getUpdates(self):
+        '''Retrieves conversation updates'''
+
+        rez = r.get( '%s/getUpdates' % self.id )
+        z = json.loads( rez.text )['result']
+
+        return z
 
 def reply():
     with open('generic.txt') as data:
@@ -76,7 +96,7 @@ def sendAudio():
     path = os.getenv('ICONIC_AUDIO')
     selected = random.choice(os.listdir(path))
     files = {'audio': open(os.path.join(path,selected), 'rb')}
-    data = {'chat_id' : "339387792"}
+    data = {'chat_id' : iconic.getChatID()}
     rez= r.post(url, files=files, data=data)
     print(rez.status_code, rez.reason, rez.content)
 
@@ -120,11 +140,11 @@ def listen():
                 if text.startswith('What is'):
                     rez = wiki(text)
                     this = urllib.parse.quote_plus(rez)
-                    r.post(r'%s/sendMessage?text=%s&chat_id=339387792'%(funny,str(this)))
+                    r.post(r'%s/sendMessage?text=%s&chat_id=%s'%(funny,str(this),iconic.getChatID()))
                 else:
-                    r.post(r'%s/sendMessage?text=%s&chat_id=339387792'%(funny,reply()))
+                    r.post(r'%s/sendMessage?text=%s&chat_id=%s'%(funny,reply(),iconic.getChatID()))
 
-                if text.startswith('+audio'):
+                if text.startswith('send me audio'):
                     sendAudio()
 
             last = text
@@ -143,7 +163,7 @@ def wiki(text):
     return something
 
 if __name__ == '__main__':
-
+    iconic = Iconic()
     twitter = Base()
 
     parser = argparse.ArgumentParser(description='Funny bot and friends')
@@ -162,7 +182,7 @@ if __name__ == '__main__':
         info()
     if args.say:
         text = urllib.parse.quote_plus(args.say)
-        r.post(r'%s/sendMessage?text=%s&chat_id=339387792'%(funny,text))
+        r.post(r'%s/sendMessage?text=%s&chat_id=%s'%(funny,text,iconic.getChatID()))
     if args.twit:
         twitter.stream.filter(track='sexy')
     if args.listen:
@@ -170,5 +190,5 @@ if __name__ == '__main__':
     if args.audio:
         sendAudio()
     if args.image:
-        sendImage(chat_id="339387792")
+        sendImage(chat_id=iconic.getChatID())
     
