@@ -52,7 +52,7 @@ def sendImage(path='', chat_id=0, debug=False ):
 
     url = "%s/sendPhoto" % funny
     if path='':
-        path =  os.getenv('ICONIC_IMAGES')
+        path ==  os.getenv('ICONIC_IMAGES')
     images = os.listdir( path )
     target_image = os.path.join( path,random.choice(images) )
     files = {'photo': open( target_image, 'rb')}
