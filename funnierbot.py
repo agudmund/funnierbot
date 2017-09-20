@@ -119,8 +119,15 @@ def sendImage(path='', chat_id=0, debug=False, loop=False ):
     url = "%s/sendPhoto" % funny
     if path=='':
         path =  os.getenv('ICONIC_IMAGES')
-    images = os.listdir( path )
-    target_image = os.path.join( path,random.choice(images) )
+
+    targets = []
+
+    for x,y,z in os.walk(path):
+        for n in z:
+            targetpath = os.path.join(x,n)
+            targets.append(targetpath)
+
+    target_image = random.choice(targets)
     files = {'photo': open( target_image, 'rb')}
     data = {'chat_id' : chat_id }
     rez= r.post(url, files=files, data=data)
