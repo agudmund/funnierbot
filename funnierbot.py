@@ -97,7 +97,7 @@ def reply():
         rez = data.readlines()
     return random.choice(rez).rstrip('\n')
 
-def sendImage(path='', chat_id=0, debug=False ):
+def sendImage(path='', chat_id=0, debug=False, loop=False ):
     '''Sends a random image from the gallery'''
 
     url = "%s/sendPhoto" % funny
@@ -111,6 +111,13 @@ def sendImage(path='', chat_id=0, debug=False ):
 
     if debug:
         print(rez.status_code, rez.reason, rez.content)
+
+    if loop:
+        wait = random.randint(7200,18000)
+        print ("Waiting %s seconds until next image " % wait )
+        sleep(wait)
+        sendImage(path=path,chat_id=chat_id,debug=debug,loop=loop)
+
 
 def sendAudio():
     url = "%s/sendAudio" % funny
@@ -202,6 +209,7 @@ if __name__ == '__main__':
     parser.add_argument('--listen', help='Listening daemon',action="store_true")
     parser.add_argument('--audio', help='Responds with an audio file',action="store_true")
     parser.add_argument('--image', help='Responds with an image file',action="store_true")
+    parser.add_argument('--loop', help='loop command',action="store_true")
     args = parser.parse_args()
 
     if args.new:
@@ -218,5 +226,10 @@ if __name__ == '__main__':
     if args.audio:
         sendAudio()
     if args.image:
-        sendImage(chat_id=iconic.getChatID())
+        if args.loop:
+            sendImage(chat_id=iconic.getChatID(),loop=True)
+        else:
+            sendImage(chat_id=iconic.getChatID())
+
+        
     
