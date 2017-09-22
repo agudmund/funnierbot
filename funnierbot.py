@@ -80,9 +80,22 @@ class Iconic:
 
         self.x = random.randint(0,9)
         self.y = random.randint(0,9)
-        self.z = self.x + self.y
 
-        this = "What do you get if you add %s and %s?" % (self.x,self.y)
+        mode_select = ['addition','subtraction','division','multiplication']
+        mode = random.choice(mode_select)
+        question = 'What do you get if you '
+        if mode == 'addition':
+            self.z = self.x + self.y
+            this = "%sadd %s and %s?" % (question,self.x,self.y)
+        if mode == 'subtraction':
+            self.z = self.x - self.y
+            this = "%ssubtract %s from %s?" % (question,self.y,self.x)
+        if mode == 'division':
+            self.z = self.x / self.y
+            this = "%sdivide %s by %s?" % (question,self.x,self.y)
+        if mode == 'multiplication':
+            self.z = self.x + self.y
+            this = "%sadd %s and %s?" % (question,self.x,self.y)
 
         r.post(r'%s/sendMessage?text=%s&chat_id=%s'%(funny,str(this),iconic.getChatID()))
 
@@ -111,6 +124,7 @@ class Iconic:
 def reply():
     with open('generic.txt') as data:
         rez = data.readlines()
+
     return random.choice(rez).rstrip('\n')
 
 def sendImage(path='', chat_id=0, debug=False, loop=False ):
@@ -186,8 +200,15 @@ def smallTalk(text):
         r.post(r'%s/sendMessage?text=%s&chat_id=%s'%(funny,str(this),iconic.getChatID()))
         return
     else:
-        r.post(r'%s/sendMessage?text=%s&chat_id=%s'%(funny,reply(),iconic.getChatID()))
-        return
+        erratic = random.randint(0,100)
+        if erratic>90:
+            talkative = random.randint(1,4)
+            for i in range(talkative):
+                r.post(r'%s/sendMessage?text=%s&chat_id=%s'%(funny,reply(),iconic.getChatID()))
+                sleep(random.randint(20,50)/10)
+        else:
+            r.post(r'%s/sendMessage?text=%s&chat_id=%s'%(funny,reply(),iconic.getChatID()))
+    return True
 
 def math():
     this = "ok, lets play a game, I'll give you numbers you tell me the answer."
@@ -203,6 +224,7 @@ def math():
 def listen():
     last = None
     while True:
+        # if time>x=bored, ask for attention with math or images
         text = latest()
         if text != last:
             print (text)
@@ -219,6 +241,8 @@ def listen():
                     smallTalk(text)
                     last = None
                     continue
+                if text.lower() == 'delete this':
+                    r.post(r'%s/sendMessage?text=%s&chat_id=%s'%(funny,str("ok, fine, deleting this picture, I still think it's nice though"),iconic.getChatID()))
 
                 if text[0].isdigit():
                     if text == str(iconic.z):
