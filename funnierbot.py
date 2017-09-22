@@ -54,6 +54,7 @@ class Iconic:
         self.chat_id = '339387792'
 
         # Math Quiz things
+        self.math_level = 0
         self.x = 0
         self.y = 0
         self.z = 0
@@ -81,19 +82,27 @@ class Iconic:
         self.x = random.randint(0,9)
         self.y = random.randint(0,9)
 
-        mode_select = ['addition','subtraction','division','multiplication']
+        mode_select = ['addition','subtraction','multiplication']
         mode = random.choice(mode_select)
         question = 'What do you get if you '
         if mode == 'addition':
             self.z = self.x + self.y
             this = "%sadd %s and %s?" % (question,self.x,self.y)
-        if mode == 'subtraction':
+        elif mode == 'subtraction':
             self.z = self.x - self.y
+            print('div %s' % self.z )
+            # if self.math_level<5:
+            #     while (self.x - self.y)<0:
+            #         self.x = random.randint(0,9)
+            #         self.y = random.randint(0,9)
+            #         self.z = self.x - self.y
+
+            #     print('subtr %s' % self.z )
             this = "%ssubtract %s from %s?" % (question,self.y,self.x)
-        if mode == 'division':
-            self.z = self.x / self.y
+        elif mode == 'division':
+            self.z = (self.x / self.y)
             this = "%sdivide %s by %s?" % (question,self.x,self.y)
-        if mode == 'multiplication':
+        elif mode == 'multiplication':
             self.z = self.x + self.y
             this = "%sadd %s and %s?" % (question,self.x,self.y)
 
@@ -227,8 +236,7 @@ def listen():
         # if time>x=bored, ask for attention with math or images
         text = latest()
         if text != last:
-            print (text)
-            print (last)
+            print (text,last)
             if last != None:
                 text = text.lower()
 
